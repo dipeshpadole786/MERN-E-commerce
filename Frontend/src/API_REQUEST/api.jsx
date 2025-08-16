@@ -1,5 +1,5 @@
 import axios from "axios"
 
 export const api = axios.create({
-    baseURL: "http://localhost:3000", // your backend port
+    baseURL: "https://mern-e-commerce-1-njzx.onrender.com", // your backend port
 });

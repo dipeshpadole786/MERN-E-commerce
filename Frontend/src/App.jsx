@@ -10,7 +10,7 @@ import { Cart } from "./pages/Cart";
 import { Step1 } from "./pages/Step1";
 import { Step2 } from "./pages/Step2";
 import Step3 from "./pages/Step3";
-import Order from "./pages/order";
+import Order from "./pages/Order";
 import Error from "./pages/Error";
 import { ProductManagement } from "./pages/Productmanagement";
 import { ProductEdit } from "./pages/ProductEdit";
