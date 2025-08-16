@@ -30,7 +30,7 @@ const connectDB = async () => {
 connectDB();
 // Middleware
 app.use(cors({
-    origin: "https://dipesh-ecommece.onrender.com/", // adjust to your frontend port
+    origin: "https://dipesh-ecommece.onrender.com", // adjust to your frontend port
     credentials: true, // allow cookies to be sent
 }));
 app.use(express.json());
