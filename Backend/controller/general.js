@@ -7,17 +7,31 @@ const nodemailer = require("nodemailer");
 
 
 
-module.exports.signup = async (req, res) => {
-    let { username, email, password } = req.body;
-    console.log(username, email, password);
-    let user = new User({
-        username: username,
-        email: email,
-    });
-    let newUseer = await User.register(user, password);
 
-    res.status(200).json({ message: "User signup succesfully ! " });
-}
+
+module.exports.signup = async (req, res) => {
+    try {
+        const { username, email, password } = req.body;
+
+        // check if email already exists
+        let existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ message: "Email already registered" });
+        }
+
+        // create user object (username + email)
+        const user = new User({ username, email });
+
+        // passport-local-mongoose will hash password & save user
+        await User.register(user, password);
+
+        res.status(200).json({ message: "User signup successfully!" });
+    } catch (err) {
+        console.error("Signup error:", err);
+        res.status(500).json({ message: "Signup failed", error: err.message });
+    }
+};
+
 
 module.exports.login = async (req, res) => {
     console.log(req.user); let data = req.user;
