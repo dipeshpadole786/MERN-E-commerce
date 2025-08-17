@@ -190,48 +190,60 @@ module.exports.paymentprocces = async (req, res) => {
     }
 }
 
-module.exports.addres = async (req, res) => {
-    try {
-        const { username } = req.params;
-        const { phone, address, fullName, city, state, zip } = req.body;
 
-        const user = await User.findOne({ username });
 
-        if (!user) return res.status(404).json({ error: "User not found" });
+module.exports.address = async (req, res) => {
+  try {
+    const { username } = req.params;
+    const { phone, address, fullName, city, state, zip } = req.body;
 
-        if (user.Address) {
-            const existingAddress = await Address.findById(user.Address);
-            if (existingAddress) {
-                existingAddress.name = fullName;
-                existingAddress.number = phone;
-                existingAddress.address = address;
-                existingAddress.city = city;
-                existingAddress.state = state;
-                existingAddress.Zip = zip;
-                await existingAddress.save();
-                return res.status(200).json({ data: "Updated existing address successfully" });
-            }
-        }
+    const user = await User.findOne({ username });
 
-        const newAddress = new Address({
-            name: fullName,
-            number: phone,
-            address,
-            city,
-            state,
-            Zip: zip,
-        });
-
-        await newAddress.save();
-        user.Address = newAddress._id;
-        await user.save();
-
-        res.status(200).json({ data: "Saved new address successfully" });
-    } catch (error) {
-        console.error("Error saving address:", error);
-        res.status(500).json({ error: "Server error" });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
     }
-}
+
+    // If user already has at least one saved address → update the first one
+    if (user.Address.length > 0) {
+      const existingAddress = await Address.findById(user.Address[0]);
+      if (existingAddress) {
+        existingAddress.name = fullName;
+        existingAddress.number = phone;
+        existingAddress.address = address;
+        existingAddress.city = city;
+        existingAddress.state = state;
+        existingAddress.Zip = zip;
+        await existingAddress.save();
+
+        return res
+          .status(200)
+          .json({ data: "Updated existing address successfully" });
+      }
+    }
+
+    // Otherwise, create a new address
+    const newAddress = new Address({
+      name: fullName,
+      number: phone,
+      address,
+      city,
+      state,
+      Zip: zip,
+    });
+
+    await newAddress.save();
+
+    // Push into array instead of replacing
+    user.Address.push(newAddress._id);
+    await user.save();
+
+    return res.status(200).json({ data: "Saved new address successfully" });
+  } catch (error) {
+    console.error("Error saving address:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
 
 module.exports.user_by_username = async (req, res) => {
     try {
