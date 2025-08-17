@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Item = require("./Item");
 const Schema = mongoose.schema;
 const passport_local = require("passport-local-mongoose");
-const Address = require("./Address");
+
 
 const Userschema = new mongoose.Schema({
     email: {

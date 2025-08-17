@@ -3,7 +3,7 @@ const Item = require("../Models/Item");
 const Order = require("../Models/Order");
 const Address = require("../Models/Address");
 const nodemailer = require("nodemailer");
-require("dotenv").config();
+
 
 
 
