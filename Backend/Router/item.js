@@ -6,4 +6,5 @@ router.get("/", item);
 router.get("/:id", getdata)
 router.put("/:id", update);
 router.delete("/:id", deletedata);
+let x = 90;
 module.exports = router;
